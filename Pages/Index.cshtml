@@ -1,0 +1,97 @@
+@page
+@model TaskPlanner.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home";
+    var activeTasks = Model.Tasks?.Count(t => !t.IsCompleted) ?? 0;
+    var completedTasks = Model.Tasks?.Count(t => t.IsCompleted) ?? 0;
+}
+
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+
+                                    <p class="hero-subtitle">"A goal without a plan is just a wish."<br/>— Antoine de Saint-Exupéry</p>
+                <div class="hero-stats">
+                    <div class="stat-item clickable-stat" data-task-type="active" style="cursor: pointer;" title="Click to view active tasks">
+                        <div class="stat-number">@activeTasks</div>
+                        <div class="stat-label">Active Tasks <i class="fas fa-list-ul ms-1"></i></div>
+                    </div>
+                    <div class="stat-item clickable-stat" data-task-type="completed" style="cursor: pointer;" title="Click to view completed tasks">
+                        <div class="stat-number">@completedTasks</div>
+                        <div class="stat-label">Completed <i class="fas fa-check-circle ms-1"></i></div>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <a href="/Tasks/Create" class="btn btn-primary btn-lg hero-btn">
+                        <i class="fas fa-plus me-2"></i>Add New Task
+                    </a>
+                    
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div id="task-panel" class="task-panel">
+                    <div class="panel-header">
+                        <h3 id="panel-title">
+                            <i class="fas fa-tasks me-2"></i>
+                            <span id="panel-title-text">Your Tasks</span>
+                        </h3>
+                        <div class="panel-controls">
+                            <span id="panel-subtitle">Click on Active or Completed to view</span>
+                            <button onclick="forceRefreshTasks()" class="btn btn-xs btn-outline-light ms-2" title="Force refresh tasks">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="task-list-container" class="task-list-container">
+                        <div class="welcome-message">
+                            <i class="fas fa-arrow-left fa-2x mb-3"></i>
+                            <p>Click on a counter to view tasks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden antiforgery token for forms -->
+<div style="display: none;">
+    @Html.AntiForgeryToken()
+</div>
+
+<!-- Видалено контейнер для плаваючих карток -->
+
+<!-- Hidden task data for JavaScript -->
+<script type="application/json" id="task-data">
+@{
+    var taskData = Model.Tasks?.Select(t => new {
+        Id = t.Id,
+        Name = t.Name,
+        Description = t.Description,
+        DueDate = t.DueDate.ToString("MMM dd, yyyy HH:mm"),
+        IsCompleted = t.IsCompleted
+    }).ToArray() ?? new object[0];
+}
+@Html.Raw(Json.Serialize(taskData))
+</script>
+
+<script>
+    // Перевіряємо чи є параметр refresh в URL - означає що щойно створили завдання
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('refresh')) {
+        console.log('🔄 Автооновлення після створення завдання');
+        // Видаляємо параметр з URL для чистоти
+        window.history.replaceState({}, document.title, '/');
+        // Автоматично показуємо активні завдання
+        setTimeout(() => {
+            const activeStatElement = document.querySelector('[data-task-type="active"]');
+            if (activeStatElement) {
+                activeStatElement.click();
+                console.log('📋 Активні завдання автоматично завантажені');
+            }
+        }, 500);
+    }
+</script>
+<script src="~/js/index-page.js" asp-append-version="true"></script>
+ 

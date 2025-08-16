@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Home" xml:space="preserve">
+    <value>Головна</value>
+  </data>
+  <data name="Add Task" xml:space="preserve">
+    <value>Додати завдання</value>
+  </data>
+  <data name="Welcome to Task Planner" xml:space="preserve">
+    <value>Ласкаво просимо до Планувальника завдань</value>
+  </data>
+  <data name="Organize your tasks efficiently" xml:space="preserve">
+    <value>Організовуйте свої завдання ефективно</value>
+  </data>
+  <data name="Add New Task" xml:space="preserve">
+    <value>Додати нове завдання</value>
+  </data>
+  <data name="Search tasks..." xml:space="preserve">
+    <value>Пошук завдань...</value>
+  </data>
+  <data name="All Tasks" xml:space="preserve">
+    <value>Всі завдання</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>В очікуванні</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Завершені</value>
+  </data>
+  <data name="Sort by Created" xml:space="preserve">
+    <value>Сортувати за датою створення</value>
+  </data>
+  <data name="Sort by Due Date" xml:space="preserve">
+    <value>Сортувати за терміном</value>
+  </data>
+  <data name="Sort by Name" xml:space="preserve">
+    <value>Сортувати за назвою</value>
+  </data>
+  <data name="No tasks yet" xml:space="preserve">
+    <value>Поки що немає завдань</value>
+  </data>
+  <data name="Create your first task to get started" xml:space="preserve">
+    <value>Створіть своє перше завдання, щоб почати</value>
+  </data>
+  <data name="Create Task" xml:space="preserve">
+    <value>Створити завдання</value>
+  </data>
+  <data name="Due" xml:space="preserve">
+    <value>Термін</value>
+  </data>
+  <data name="Overdue" xml:space="preserve">
+    <value>Протерміновано</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Створено</value>
+  </data>
+  <data name="Are you sure you want to delete this task?" xml:space="preserve">
+    <value>Ви впевнені, що хочете видалити це завдання?</value>
+  </data>
+  <data name="Create New Task" xml:space="preserve">
+    <value>Створити нове завдання</value>
+  </data>
+  <data name="Task Name" xml:space="preserve">
+    <value>Назва завдання</value>
+  </data>
+  <data name="Enter task name" xml:space="preserve">
+    <value>Введіть назву завдання</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Опис</value>
+  </data>
+  <data name="Enter task description (optional)" xml:space="preserve">
+    <value>Введіть опис завдання (необов'язково)</value>
+  </data>
+  <data name="Due Date" xml:space="preserve">
+    <value>Термін виконання</value>
+  </data>
+  <data name="Back to Tasks" xml:space="preserve">
+    <value>Назад до завдань</value>
+  </data>
+  <data name="Edit Task" xml:space="preserve">
+    <value>Редагувати завдання</value>
+  </data>
+  <data name="Update Task" xml:space="preserve">
+    <value>Оновити завдання</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Конфіденційність</value>
+  </data>
+  <data name="Privacy Policy" xml:space="preserve">
+    <value>Політика конфіденційності</value>
+  </data>
+  <data name="This Task Planner application stores your tasks locally on your device. No data is transmitted to external servers." xml:space="preserve">
+    <value>Цей додаток Планувальник завдань зберігає ваші завдання локально на вашому пристрої. Жодні дані не передаються на зовнішні сервери.</value>
+  </data>
+  <data name="Your task data is stored in a JSON file in the application's data directory." xml:space="preserve">
+    <value>Ваші дані завдань зберігаються у файлі JSON у каталозі даних додатку.</value>
+  </data>
+</root> 

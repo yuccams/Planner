@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="@System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Task Planner</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" type="text/css" />
+    <style>
+    /* Додаткові стилі для календаря */
+    input[type="datetime-local"] {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      border-radius: 10px !important;
+      color: white !important;
+      padding: 0.75rem 1rem !important;
+      transition: all 0.3s ease !important;
+    }
+    
+    input[type="datetime-local"]:focus {
+      background: rgba(255, 255, 255, 0.15) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+      box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      position: absolute !important;
+      right: 0 !important;
+      top: 0 !important;
+      pointer-events: none !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-datetime-edit {
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-datetime-edit-text {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+    input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+    input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+    input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+    input[type="datetime-local"]::-webkit-datetime-edit-minute-field {
+      color: white !important;
+    }
+    
+    /* Firefox стилі */
+    input[type="datetime-local"]::-moz-datetime-edit {
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-moz-datetime-edit-fields-wrapper {
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-moz-datetime-edit-text {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    input[type="datetime-local"]::-moz-datetime-edit-month-field,
+    input[type="datetime-local"]::-moz-datetime-edit-day-field,
+    input[type="datetime-local"]::-moz-datetime-edit-year-field,
+    input[type="datetime-local"]::-moz-datetime-edit-hour-field,
+    input[type="datetime-local"]::-moz-datetime-edit-minute-field {
+      color: white !important;
+    }
+    
+    /* Edge стилі */
+    input[type="datetime-local"]::-ms-datetime-edit {
+      color: white !important;
+    }
+    
+    /* Приховуємо стандартні елементи */
+    input[type="datetime-local"]::-webkit-inner-spin-button,
+    input[type="datetime-local"]::-webkit-outer-spin-button {
+      -webkit-appearance: none !important;
+      margin: 0 !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-clear-button {
+      display: none !important;
+    }
+    
+    /* Приховуємо стандартну іконку календаря */
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      display: none !important;
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      position: absolute !important;
+      right: -9999px !important;
+      top: -9999px !important;
+      pointer-events: none !important;
+      visibility: hidden !important;
+    }
+    
+    input[type="datetime-local"]::-moz-calendar-picker-indicator {
+      display: none !important;
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      position: absolute !important;
+      right: -9999px !important;
+      top: -9999px !important;
+      pointer-events: none !important;
+      visibility: hidden !important;
+    }
+    
+    /* Додаткові правила для всіх браузерів */
+    input[type="datetime-local"]::-webkit-inner-spin-button,
+    input[type="datetime-local"]::-webkit-outer-spin-button {
+      -webkit-appearance: none !important;
+      margin: 0 !important;
+      display: none !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-clear-button {
+      display: none !important;
+      -webkit-appearance: none !important;
+    }
+    
+    /* Стилі для тексту в календарі */
+    input[type="datetime-local"]::-webkit-datetime-edit {
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-datetime-edit-text {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+    input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+    input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+    input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+    input[type="datetime-local"]::-webkit-datetime-edit-minute-field {
+      color: white !important;
+    }
+    
+    /* Firefox стилі */
+    input[type="datetime-local"]::-moz-datetime-edit {
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-moz-datetime-edit-fields-wrapper {
+      color: white !important;
+    }
+    
+    input[type="datetime-local"]::-moz-datetime-edit-text {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    input[type="datetime-local"]::-moz-datetime-edit-month-field,
+    input[type="datetime-local"]::-moz-datetime-edit-day-field,
+    input[type="datetime-local"]::-moz-datetime-edit-year-field,
+    input[type="datetime-local"]::-moz-datetime-edit-hour-field,
+    input[type="datetime-local"]::-moz-datetime-edit-minute-field {
+      color: white !important;
+    }
+    
+    /* Edge стилі */
+    input[type="datetime-local"]::-ms-datetime-edit {
+      color: white !important;
+    }
+    
+    /* Додаткові стилі для кращого відображення */
+    input[type="datetime-local"]:invalid {
+      color: rgba(255, 255, 255, 0.6) !important;
+    }
+    
+    input[type="datetime-local"]:valid {
+      color: white !important;
+    }
+    </style>
+    <style>
+    .navbar-transparent {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-transparent .navbar-brand,
+    .navbar-transparent .nav-link {
+      color: white !important;
+      font-weight: 500;
+    }
+
+    .navbar-transparent .navbar-brand:hover,
+    .navbar-transparent .nav-link:hover {
+      color: #ff6b6b !important;
+    }
+
+    .navbar-transparent .navbar-toggler {
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .navbar-transparent .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    
+    body {
+      padding-top: 70px;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-transparent">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <i class="fas fa-tasks me-2"></i>Julia's Planner
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Tasks/Create">Add Task</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-globe me-1"></i>
+                                <span id="currentLang">EN</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                                <li><a class="dropdown-item" href="#" data-lang="en"><i class="fas fa-flag-usa me-2"></i>English</a></li>
+                                <li><a class="dropdown-item" href="#" data-lang="uk"><i class="fas fa-flag me-2" style="color: #0057b7;"></i>Українська</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <script>
+        // Language translations
+        const translations = {
+            'en': {
+                'subtitle': '"A goal without a plan is just a wish."<br/>— Antoine de Saint-Exupéry',
+                'totalTasks': 'Active Tasks',
+                'completed': 'Completed',
+                'addNewTask': 'Add New Task',
+                'allTasks': 'Active Tasks',
+                'completedTasks': 'Completed Tasks',
+                'noTasks': 'No tasks found',
+                'noCompletedTasks': 'No completed tasks found',
+                'showing': 'Showing',
+                'tasks': 'task(s)',
+                'completedTasksCount': 'completed task(s)',
+                'clickToView': 'Click on a counter to view tasks',
+                'yourTasks': 'Your Tasks',
+                'clickToViewTasks': 'Click on Active or Completed to view',
+                'addTask': 'Add Task',
+                'brand': 'Julia\'s Planner',
+                'taskName': 'Task Name',
+                'description': 'Description',
+                'dueDate': 'Due Date',
+                'createTask': 'Create Task',
+                'editTask': 'Edit Task',
+                'markCompleted': 'Mark as completed',
+                'markPending': 'Mark as pending',
+                'edit': 'Edit',
+                'delete': 'Delete',
+                'due': 'Due',
+                'refreshTasks': 'Refresh tasks',
+                'noTasks': 'No tasks found',
+                'noCompletedTasks': 'No completed tasks found',
+                'markCompleted': 'Mark as completed',
+                'markPending': 'Mark as pending',
+                'delete': 'Delete',
+                'cancel': 'Cancel',
+                'confirmDeleteMessage': 'Are you sure you want to delete this task?',
+                'toastCreated': 'Task created successfully!',
+                'backToTasks': 'Back to Tasks',
+                'createTask': 'Create Task',
+                'taskName': 'Task Name',
+                'description': 'Description',
+                'dueDate': 'Due Date',
+                'taskNamePlaceholder': 'Enter task name',
+                'descriptionPlaceholder': 'Enter task description (optional)',
+                'pageTitleCreate': 'Create New Task'
+            },
+            'uk': {
+                'subtitle': '"Мета без плану — це просто бажання."<br/>— Антуан де Сент-Екзюпері',
+                'totalTasks': 'Активні завдання',
+                'completed': 'Виконано',
+                'addNewTask': 'Додати завдання',
+                'allTasks': 'Активні завдання',
+                'completedTasks': 'Виконані завдання',
+                'noTasks': 'Завдань не знайдено',
+                'noCompletedTasks': 'Виконаних завдань не знайдено',
+                'showing': 'Показано',
+                'tasks': 'завдань',
+                'completedTasksCount': 'виконаних завдань',
+                'clickToView': 'Натисніть на лічильник, щоб переглянути завдання',
+                'yourTasks': 'Ваші завдання',
+                'clickToViewTasks': 'Натисніть на Активні або Виконані, щоб переглянути завдання',
+                'addTask': 'Додати завдання',
+                'brand': 'Планер Юлії',
+                'taskName': 'Назва завдання',
+                'description': 'Опис',
+                'dueDate': 'Термін виконання',
+                'createTask': 'Створити завдання',
+                'editTask': 'Редагувати завдання',
+                'markCompleted': 'Позначити як виконане',
+                'markPending': 'Позначити як невиконане',
+                'edit': 'Редагувати',
+                'delete': 'Видалити',
+                'due': 'Термін',
+                'refreshTasks': 'Оновити завдання',
+                'noTasks': 'Завдань не знайдено',
+                'noCompletedTasks': 'Виконаних завдань не знайдено',
+                'markCompleted': 'Позначити як виконане',
+                'markPending': 'Позначити як невиконане',
+                'delete': 'Видалити',
+                'cancel': 'Скасувати',
+                'confirmDeleteMessage': 'Ви точно бажаєте видалити завдання?',
+                'toastCreated': 'Завдання успішно створено!',
+                'backToTasks': 'Назад до завдань',
+                'createTask': 'Створити завдання',
+                'taskName': 'Назва завдання',
+                'description': 'Опис',
+                'dueDate': 'Термін виконання',
+                'taskNamePlaceholder': 'Введіть назву завдання',
+                'descriptionPlaceholder': 'Введіть опис завдання (необ\'язково)',
+                'pageTitleCreate': 'Створити нове завдання'
+            }
+        };
+
+        function switchLanguage(lang) {
+            localStorage.setItem('language', lang);
+            document.getElementById('currentLang').textContent = lang.toUpperCase();
+            window.currentLanguage = lang;
+            translatePage(lang);
+            try { if (window.onLanguageChanged) window.onLanguageChanged(); } catch(_) {}
+            try { window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang })); } catch(_) {}
+            // Also call an explicit hook if present
+            try { if (typeof window.refreshListLanguage === 'function') window.refreshListLanguage(); } catch(_) {}
+            try { setTimeout(() => { if (typeof window.translateCreatePage === 'function') window.translateCreatePage(); }, 0); } catch(_) {}
+            try { window.postMessage({ type: 'languageChanged', lang }, '*'); } catch(_) {}
+        }
+
+        function translatePage(lang) {
+            const t = translations[lang];
+            if (!t) return;
+
+            // Main title removed - no need to update
+
+            const subtitleElement = document.querySelector('.hero-subtitle');
+            if (subtitleElement) subtitleElement.innerHTML = t.subtitle;
+
+            // Update stat labels
+            const totalTasksLabel = document.querySelector('[data-task-type="active"] .stat-label');
+            if (totalTasksLabel) totalTasksLabel.innerHTML = t.totalTasks + ' <i class="fas fa-list-ul ms-1"></i>';
+
+            const completedLabel = document.querySelector('[data-task-type="completed"] .stat-label');
+            if (completedLabel) completedLabel.innerHTML = t.completed + ' <i class="fas fa-check-circle ms-1"></i>';
+
+            // Update navigation
+            const navbarBrand = document.querySelector('.navbar-brand');
+            if (navbarBrand) {
+                navbarBrand.innerHTML = '<i class="fas fa-tasks me-2"></i>' + t.brand;
+            }
+
+            // Update add task link by href (attribute selectors from Razor not available at runtime)
+            const addTaskLink = document.querySelector('a[href="/Tasks/Create"]');
+            if (addTaskLink) addTaskLink.textContent = t.addTask;
+            
+            // Also update navigation links by their content (fallback method)
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            navLinks.forEach(link => {
+                if (link.textContent.trim() === 'Add Task' || link.textContent.trim() === 'Додати завдання') {
+                    link.textContent = t.addTask;
+                }
+            });
+
+            const addNewTaskBtn = document.querySelector('.hero-btn');
+            if (addNewTaskBtn) addNewTaskBtn.innerHTML = '<i class="fas fa-plus me-2"></i>' + t.addNewTask;
+
+            // Update panel title/subtitle deterministically based on active tab
+            const activeItem = document.querySelector('.clickable-stat.active');
+            const currentType = activeItem ? activeItem.getAttribute('data-task-type') : 'active';
+            const panelTitleText = document.getElementById('panel-title-text');
+            if (panelTitleText) {
+                panelTitleText.textContent = currentType === 'completed' ? t.completedTasks : t.allTasks;
+            }
+            const panelSubtitleEl = document.getElementById('panel-subtitle');
+            if (panelSubtitleEl) {
+                const list = Array.isArray(window.tasks) ? window.tasks : [];
+                const count = currentType === 'completed'
+                    ? list.filter(x => x && (x.IsCompleted || x.isCompleted)).length
+                    : list.filter(x => x && !(x.IsCompleted || x.isCompleted)).length;
+                panelSubtitleEl.textContent = currentType === 'completed'
+                    ? `${t.showing} ${count} ${t.completedTasksCount}`
+                    : `${t.showing} ${count} ${t.tasks}`;
+            }
+
+            const welcomeMessage = document.querySelector('.welcome-message p');
+            if (welcomeMessage) welcomeMessage.textContent = t.clickToView;
+            
+            // Update panel elements specifically
+            const panelTitleDefault = document.getElementById('panel-title-text');
+            if (panelTitleDefault) {
+                const currentText = panelTitleDefault.textContent.trim();
+                if (currentText === 'Your Tasks' || currentText === 'Ваші завдання') {
+                    panelTitleDefault.textContent = t.yourTasks;
+                }
+            }
+            
+            const panelSubtitle = document.getElementById('panel-subtitle');
+            if (panelSubtitle) {
+                const currentText = panelSubtitle.textContent.trim();
+                if (currentText.includes('Click on Total Tasks') || currentText.includes('Натисніть на лічильник')) {
+                    panelSubtitle.textContent = t.clickToViewTasks;
+                }
+            }
+            
+            // Update refresh button tooltip
+            const refreshButton = document.querySelector('button[onclick="refreshTasks()"]');
+            if (refreshButton) {
+                refreshButton.setAttribute('title', t.refreshTasks);
+            }
+
+            // If task list is present, re-render it in the new language
+            try {
+                const activeItem = document.querySelector('.clickable-stat.active');
+                const taskType = activeItem ? activeItem.getAttribute('data-task-type') : 'active';
+                if (typeof showTasks === 'function') {
+                    showTasks(taskType);
+                } else if (window.onLanguageChanged) {
+                    window.onLanguageChanged();
+                }
+            } catch(_) { }
+
+            // Create page live translation (if elements exist)
+            try {
+                const pageTitle = document.getElementById('page-title');
+                if (pageTitle && t.pageTitleCreate) pageTitle.textContent = t.pageTitleCreate;
+                const taskNameLabel = document.getElementById('label-task-name');
+                if (taskNameLabel && t.taskName) taskNameLabel.textContent = t.taskName;
+                const descriptionLabel = document.getElementById('label-description');
+                if (descriptionLabel && t.description) descriptionLabel.textContent = t.description;
+                const dueDateLabel = document.getElementById('label-due-date');
+                if (dueDateLabel && t.dueDate) dueDateLabel.textContent = t.dueDate;
+                const backButton = document.getElementById('btn-back');
+                if (backButton && t.backToTasks) backButton.textContent = t.backToTasks;
+                const createButton = document.getElementById('btn-create');
+                if (createButton && t.createTask) createButton.textContent = t.createTask;
+                const taskNameInput = document.getElementById('taskName');
+                if (taskNameInput && t.taskNamePlaceholder) taskNameInput.placeholder = t.taskNamePlaceholder;
+                const descriptionInput = document.getElementById('taskDescription');
+                if (descriptionInput && t.descriptionPlaceholder) descriptionInput.placeholder = t.descriptionPlaceholder;
+            } catch(_) {}
+        }
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('language') || 'en';
+            window.currentLanguage = savedLang;
+            document.getElementById('currentLang').textContent = savedLang.toUpperCase();
+            translatePage(savedLang);
+
+            // Bind language dropdown clicks
+            const bindLangHandlers = () => {
+                // New API
+                document.querySelectorAll('[data-lang]').forEach(el => {
+                    el.addEventListener('click', function(e){
+                        e.preventDefault();
+                        const lang = this.getAttribute('data-lang');
+                        if (!lang) return;
+                        switchLanguage(lang);
+                        setTimeout(() => { if (window.translateCreatePage) window.translateCreatePage(); }, 0);
+                    });
+                });
+                // Fallback: legacy items with inline onclick
+                document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(el => {
+                    el.addEventListener('click', function(e){
+                        if (this.getAttribute('data-lang')) return; // already handled
+                        e.preventDefault();
+                        const text = (this.textContent || '').toLowerCase();
+                        const lang = text.includes('укра') ? 'uk' : 'en';
+                        switchLanguage(lang);
+                        setTimeout(() => { if (window.translateCreatePage) window.translateCreatePage(); }, 0);
+                    });
+                });
+            };
+            bindLangHandlers();
+
+            // Global capture: catch any clicks in header menu as last resort
+            const headerEl = document.querySelector('header');
+            if (headerEl) {
+                headerEl.addEventListener('click', function(e){
+                    const a = e.target && e.target.closest ? e.target.closest('a') : null;
+                    if (!a) return;
+                    const dataLang = a.getAttribute('data-lang');
+                    if (dataLang === 'en' || dataLang === 'uk') {
+                        e.preventDefault();
+                        switchLanguage(dataLang);
+                        setTimeout(() => { if (window.translateCreatePage) window.translateCreatePage(); }, 0);
+                        return;
+                    }
+                    const txt = (a.textContent || '').toLowerCase();
+                    if (txt.includes('укра') || txt === 'uk') {
+                        e.preventDefault();
+                        switchLanguage('uk');
+                        setTimeout(() => { if (window.translateCreatePage) window.translateCreatePage(); }, 0);
+                    } else if (txt.includes('english') || txt === 'en') {
+                        e.preventDefault();
+                        switchLanguage('en');
+                        setTimeout(() => { if (window.translateCreatePage) window.translateCreatePage(); }, 0);
+                    }
+                }, true);
+            }
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html> 

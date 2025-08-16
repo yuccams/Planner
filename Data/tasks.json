@@ -1,0 +1,20 @@
+[
+  {
+    "Id": "355bd791-b1dc-4cde-9f69-acb78b5ec08a",
+    "Name": "Test Task",
+    "Description": "This is a test task created on startup",
+    "DueDate": "2025-08-07T23:23:32.079734+03:00",
+    "IsCompleted": true,
+    "CreatedAt": "2025-08-06T20:23:32.092719Z",
+    "CompletedAt": "2025-08-06T23:00:00.000000Z"
+  },
+  {
+    "Id": "123e4567-e89b-12d3-a456-426614174000",
+    "Name": "Нова задача для тестування",
+    "Description": "Ця задача додана для перевірки лічільника",
+    "DueDate": "2025-08-16T09:00:00.000000Z",
+    "IsCompleted": false,
+    "CreatedAt": "2025-08-15T10:00:00.000000Z",
+    "CompletedAt": null
+  }
+]

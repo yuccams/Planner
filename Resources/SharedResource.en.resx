@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Add Task" xml:space="preserve">
+    <value>Add Task</value>
+  </data>
+  <data name="Welcome to Task Planner" xml:space="preserve">
+    <value>Welcome to Task Planner</value>
+  </data>
+  <data name="Organize your tasks efficiently" xml:space="preserve">
+    <value>Organize your tasks efficiently</value>
+  </data>
+  <data name="Add New Task" xml:space="preserve">
+    <value>Add New Task</value>
+  </data>
+  <data name="Search tasks..." xml:space="preserve">
+    <value>Search tasks...</value>
+  </data>
+  <data name="All Tasks" xml:space="preserve">
+    <value>All Tasks</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Sort by Created" xml:space="preserve">
+    <value>Sort by Created</value>
+  </data>
+  <data name="Sort by Due Date" xml:space="preserve">
+    <value>Sort by Due Date</value>
+  </data>
+  <data name="Sort by Name" xml:space="preserve">
+    <value>Sort by Name</value>
+  </data>
+  <data name="No tasks yet" xml:space="preserve">
+    <value>No tasks yet</value>
+  </data>
+  <data name="Create your first task to get started" xml:space="preserve">
+    <value>Create your first task to get started</value>
+  </data>
+  <data name="Create Task" xml:space="preserve">
+    <value>Create Task</value>
+  </data>
+  <data name="Due" xml:space="preserve">
+    <value>Due</value>
+  </data>
+  <data name="Overdue" xml:space="preserve">
+    <value>Overdue</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="Are you sure you want to delete this task?" xml:space="preserve">
+    <value>Are you sure you want to delete this task?</value>
+  </data>
+  <data name="Create New Task" xml:space="preserve">
+    <value>Create New Task</value>
+  </data>
+  <data name="Task Name" xml:space="preserve">
+    <value>Task Name</value>
+  </data>
+  <data name="Enter task name" xml:space="preserve">
+    <value>Enter task name</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Enter task description (optional)" xml:space="preserve">
+    <value>Enter task description (optional)</value>
+  </data>
+  <data name="Due Date" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="Back to Tasks" xml:space="preserve">
+    <value>Back to Tasks</value>
+  </data>
+  <data name="Edit Task" xml:space="preserve">
+    <value>Edit Task</value>
+  </data>
+  <data name="Update Task" xml:space="preserve">
+    <value>Update Task</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Privacy Policy" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="This Task Planner application stores your tasks locally on your device. No data is transmitted to external servers." xml:space="preserve">
+    <value>This Task Planner application stores your tasks locally on your device. No data is transmitted to external servers.</value>
+  </data>
+  <data name="Your task data is stored in a JSON file in the application's data directory." xml:space="preserve">
+    <value>Your task data is stored in a JSON file in the application's data directory.</value>
+  </data>
+</root> 

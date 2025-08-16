@@ -1,0 +1,354 @@
+@page
+@model TaskPlanner.Pages.Tasks.CreateModel
+@{
+    ViewData["Title"] = "Create Task";
+}
+
+
+
+<div class="create-task-section">
+    <div class="container">
+        <div class="create-task-content">
+            <div class="create-task-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-plus me-2"></i><span id="page-title">Create New Task</span>
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate class="ajax-form">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <label for="taskName" class="form-label">
+                                <i class="fas fa-tag me-1"></i><span id="label-task-name">Task Name</span>
+                            </label>
+                            <input type="text" id="taskName" name="Task.Name" asp-for="Task.Name" class="form-control" placeholder="Enter task name" />
+                            <span asp-validation-for="Task.Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskDescription" class="form-label">
+                                <i class="fas fa-align-left me-1"></i><span id="label-description">Description</span>
+                            </label>
+                            <textarea id="taskDescription" name="Task.Description" asp-for="Task.Description" class="form-control" rows="3" 
+                                      placeholder="Enter task description (optional)"></textarea>
+                            <span asp-validation-for="Task.Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="taskDueDate" class="form-label">
+                                <i class="fas fa-calendar me-1"></i><span id="label-due-date">Due Date</span>
+                            </label>
+                            <div class="custom-datetime-input">
+                                <input type="datetime-local" id="taskDueDate" name="Task.DueDate" asp-for="Task.DueDate" class="form-control custom-datetime" />
+                                <div class="datetime-overlay">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                            </div>
+                            <span asp-validation-for="Task.DueDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-actions">
+                            <a href="/" class="btn btn-back">
+                                <i class="fas fa-arrow-left me-2"></i><span id="btn-back">Back to Tasks</span>
+                            </a>
+                            <button type="button" id="submitButton" class="btn btn-create" onclick="submitFormAjax();">
+                                <i class="fas fa-save me-2"></i><span id="btn-create">Create Task</span>
+                            </button>
+                        </div>
+                        
+                        
+                        
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // Language support
+    // Expose translator globally so header can call it
+    window.translateCreatePage = function translateCreatePage() {
+        const currentLang = (window.currentLanguage || localStorage.getItem('language') || 'en');
+        const t = (window.translations && window.translations[currentLang]) || null;
+        if (!t) return;
+        const pageTitle = document.getElementById('page-title');
+        if (pageTitle && t.pageTitleCreate) pageTitle.textContent = t.pageTitleCreate;
+        const taskNameLabel = document.getElementById('label-task-name');
+        if (taskNameLabel && t.taskName) taskNameLabel.textContent = t.taskName;
+        const descriptionLabel = document.getElementById('label-description');
+        if (descriptionLabel && t.description) descriptionLabel.textContent = t.description;
+        const dueDateLabel = document.getElementById('label-due-date');
+        if (dueDateLabel && t.dueDate) dueDateLabel.textContent = t.dueDate;
+        const backButton = document.getElementById('btn-back');
+        if (backButton && t.backToTasks) backButton.textContent = t.backToTasks;
+        const createButton = document.getElementById('btn-create');
+        if (createButton && t.createTask) createButton.textContent = t.createTask;
+        const taskNameInput = document.getElementById('taskName');
+        if (taskNameInput && t.taskNamePlaceholder) taskNameInput.placeholder = t.taskNamePlaceholder;
+        const descriptionInput = document.getElementById('taskDescription');
+        if (descriptionInput && t.descriptionPlaceholder) descriptionInput.placeholder = t.descriptionPlaceholder;
+        const titleText = t.pageTitleCreate || 'Create New Task';
+        document.title = titleText + ' - ' + (currentLang === 'uk' ? 'Планер Юлії' : 'Julia\'s Planner');
+    }
+    // Live updates when language changes (bind immediately)
+    window.addEventListener('languageChanged', function() { try { setTimeout(() => window.translateCreatePage(), 0); } catch(_) {} });
+    window.addEventListener('storage', function(e) { if (e.key === 'language') { try { window.translateCreatePage(); } catch(_) {} } });
+    window.addEventListener('message', function(e) { if (e && e.data && e.data.type === 'languageChanged') { try { window.translateCreatePage(); } catch(_) {} } });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedLang = localStorage.getItem('language') || 'en';
+        const currentLangEl = document.getElementById('currentLang');
+        if (currentLangEl) currentLangEl.textContent = savedLang.toUpperCase();
+        try { window.translateCreatePage(); } catch(_) {}
+        if (typeof MutationObserver !== 'undefined' && currentLangEl) {
+            const obs = new MutationObserver(() => { try { window.translateCreatePage(); } catch(_) {} });
+            obs.observe(currentLangEl, { childList: true, characterData: true, subtree: true });
+        }
+    });
+</script>
+
+<script>
+    // Ensure calendar overlay and input open the native picker
+    document.addEventListener('DOMContentLoaded', function() {
+        const dueDateInput = document.getElementById('taskDueDate');
+        const calendarOverlay = document.querySelector('.datetime-overlay');
+        if (!dueDateInput) return;
+
+        function tryOpenPicker() {
+            try {
+                if (typeof dueDateInput.showPicker === 'function') {
+                    dueDateInput.showPicker();
+                    return true;
+                }
+            } catch(_) {}
+            return false;
+        }
+
+        function openDatePickerFallback() {
+            if (!tryOpenPicker()) {
+                // Fallbacks
+                dueDateInput.focus();
+                // Synthesize a user click to improve compatibility
+                try { dueDateInput.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true })); } catch(_) {}
+                try { dueDateInput.click(); } catch(_) {}
+            }
+        }
+
+        // Bind on overlay
+        if (calendarOverlay) {
+            calendarOverlay.style.pointerEvents = 'auto';
+            calendarOverlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openDatePickerFallback();
+            });
+        }
+
+        // Bind on input as well (click/focus)
+        dueDateInput.addEventListener('click', openDatePickerFallback);
+        dueDateInput.addEventListener('focus', function(){ setTimeout(openDatePickerFallback, 0); });
+        dueDateInput.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDatePickerFallback(); } });
+    });
+</script>
+
+<script>
+    // AJAX функція для відправки форми без перезавантаження - винесена в окремий скрипт
+    window.submitFormAjax = function() {
+            console.log('🚀 AJAX ВІДПРАВКА РОЗПОЧАТА');
+            
+            const form = document.querySelector('form[method="post"]');
+            const button = document.getElementById('submitButton');
+            
+            console.log('📋 Форма знайдена:', form);
+            console.log('🔘 Кнопка знайдена:', button);
+            
+            if (!form) {
+                console.error('❌ Форма не знайдена');
+                return;
+            }
+            
+            // СПОЧАТКУ ПЕРЕВІРЯЄМО ПОЛЯ
+            const nameInput = document.getElementById('taskName');
+            const descInput = document.getElementById('taskDescription');
+            const dateInput = document.getElementById('taskDueDate');
+            
+            console.log('📋 ЕЛЕМЕНТИ ПОЛІВ:');
+            console.log('  nameInput:', nameInput);
+            console.log('  descInput:', descInput);
+            console.log('  dateInput:', dateInput);
+            
+            if (!nameInput || !descInput || !dateInput) {
+                console.error('❌ Не знайдено всі поля форми!');
+                showAlert('❌ Помилка: не знайдено поля форми', 'danger');
+                return;
+            }
+            
+            console.log('📋 ЗНАЧЕННЯ ПОЛІВ ПЕРЕД ВАЛІДАЦІЄЮ:');
+            console.log(`  taskName.value: "${nameInput.value}"`);
+            console.log(`  taskName.name: "${nameInput.name}"`);
+            console.log(`  taskDescription.value: "${descInput.value}"`);
+            console.log(`  taskDescription.name: "${descInput.name}"`);
+            console.log(`  taskDueDate.value: "${dateInput.value}"`);
+            console.log(`  taskDueDate.name: "${dateInput.name}"`);
+            
+            // Блокуємо кнопку
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
+            console.log('🔒 Кнопка заблокована');
+            
+            // Збираємо дані форми у URLSearchParams замість FormData для кращого model binding
+            const formData = new URLSearchParams();
+            
+            // Додаємо поля вручну
+            formData.append('Task.Name', nameInput.value);
+            formData.append('Task.Description', descInput.value);
+            formData.append('Task.DueDate', dateInput.value);
+            
+            // Додаємо antiforgery token
+            const tokenInput = form.querySelector('input[name="__RequestVerificationToken"]');
+            if (tokenInput) {
+                formData.append('__RequestVerificationToken', tokenInput.value);
+            }
+            
+            console.log('📋 Дані форми зібрано (URLSearchParams)');
+            
+            // Логуємо всі дані що відправляються
+            console.log('📋 ДАНІ URLSEARCHPARAMS:');
+            for (let [key, value] of formData.entries()) {
+                console.log(`  ${key}: "${value}"`);
+            }
+            
+            // Перевіряємо обов'язкові поля
+            const taskName = formData.get('Task.Name');
+            const taskDueDate = formData.get('Task.DueDate');
+            
+            console.log(`🔍 Перевірка полів: Name="${taskName}", DueDate="${taskDueDate}"`);
+            
+            if (!taskName || taskName.trim() === '') {
+                showAlert('❌ Назва завдання порожня!', 'danger');
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-save me-2"></i>Create Task';
+                return;
+            }
+            
+            if (!taskDueDate) {
+                showAlert('❌ Дата виконання не встановлена!', 'danger');
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-save me-2"></i>Create Task';
+                return;
+            }
+            
+            console.log(`✅ Валідація клієнта пройдена: Name="${taskName}", DueDate="${taskDueDate}"`);
+            
+            // Перевіряємо URL куди відправляємо
+            const actionUrl = form.action || '/Tasks/Create';
+            console.log(`🌐 AJAX URL: ${actionUrl}`);
+            console.log(`🌐 Current page: ${window.location.href}`);
+            console.log(`🌐 Form action attribute: ${form.action}`);
+            
+            // Перевіряємо antiforgery token (використовуємо вже оголошену змінну)
+            console.log('🔐 Antiforgery token element:', tokenInput);
+            console.log('🔐 Token value:', tokenInput ? tokenInput.value : 'NOT FOUND');
+            
+            // Відправляємо AJAX з application/x-www-form-urlencoded
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(async response => {
+                console.log('📡 Відповідь сервера:', response.status, response.statusText);
+                console.log('📡 URL відповіді:', response.url);
+                console.log('📡 Headers:', [...response.headers.entries()]);
+                
+                // Читаємо текст відповіді для діагностики
+                const responseText = await response.text();
+                console.log('📡 Тіло відповіді (перші 500 символів):', responseText.substring(0, 500));
+                
+                // Перевіряємо чи є помилки валідації в HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(responseText, 'text/html');
+                const validationErrors = doc.querySelectorAll('.text-danger');
+                
+                if (validationErrors.length > 0) {
+                    console.log('❌ ЗНАЙДЕНО ПОМИЛКИ ВАЛІДАЦІЇ:');
+                    const errors = [];
+                    validationErrors.forEach((error, index) => {
+                        const errorText = error.textContent.trim();
+                        if (errorText) {
+                            console.log(`❌ Помилка ${index + 1}: ${errorText}`);
+                            errors.push(errorText);
+                        }
+                    });
+                    
+                    const errorMessage = errors.length > 0 ? errors.join(', ') : 'Невідомі помилки валідації';
+                    console.log('❌ ВСІ ПОМИЛКИ:', errorMessage);
+                    showAlert('❌ Помилки валідації: ' + errorMessage, 'danger');
+                    
+                    // Відновлюємо кнопку
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fas fa-save me-2"></i>Create Task';
+                    return;
+                }
+                
+                if (response.ok) {
+                    console.log('✅ ЗАВДАННЯ СТВОРЕНО УСПІШНО!');
+                    
+                    // Перевіряємо чи це редирект
+                    if (response.url.includes('/') && response.status === 200) {
+                        console.log('✅ Сервер підтвердив створення завдання');
+                        try {
+                            const headerLang = ((document.getElementById('currentLang')?.textContent)||'en').toLowerCase();
+                            if (headerLang) { try { localStorage.setItem('language', headerLang); window.currentLanguage = headerLang; } catch(_) {} }
+                            const lang = headerLang || (window.currentLanguage || localStorage.getItem('language') || 'en');
+                            const t = (window.translations && window.translations[lang]) || {};
+                            const msg = lang==='uk' ? (t.toastCreated || 'Завдання успішно створено!') : (t.toastCreated || 'Task created successfully!');
+                            showAlert(msg, 'success');
+                        } catch(_) { showAlert('Task created successfully!', 'success'); }
+                        setTimeout(() => { window.location.href = '/?refresh=' + Date.now(); }, 1200);
+                    } else {
+                        console.log('⚠️ Незвичайна відповідь сервера');
+                        const lang = (window.currentLanguage || localStorage.getItem('language') || 'en');
+                        showAlert(lang==='uk' ? '⚠️ Сервер повернув незвичайну відповідь. Перевіряємо результат...' : '⚠️ Server returned an unusual response. Checking result...', 'warning');
+                        setTimeout(() => { window.location.href = '/?refresh=' + Date.now(); }, 1200);
+                    }
+                } else {
+                    console.log('❌ Помилка валідації, перезавантажуємо сторінку');
+                    console.log('❌ Текст помилки:', responseText);
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('❌ Помилка AJAX:', error);
+                
+                // Відновлюємо кнопку при помилці
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-save me-2"></i>Create Task';
+            });
+        };
+        
+        console.log('✅ AJAX функція готова');
+        
+        // Тест що функція доступна
+        if (typeof window.submitFormAjax === 'function') {
+            console.log('✅ submitFormAjax функція правильно визначена');
+        } else {
+            console.error('❌ submitFormAjax функція НЕ визначена!');
+        }
+    // Закінчується після завантаження DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('✅ submitFormAjax готова після DOM загрузки');
+    });
+</script>
+
+@section Scripts {
+    <script src="/js/create-page.js?v=@DateTime.Now.Ticks" onload="console.log('[Planner] create-page.js УСПІШНО ЗАВАНТАЖЕНО')" onerror="console.error('[Planner] ПОМИЛКА ЗАВАНТАЖЕННЯ create-page.js')"></script>
+} 
